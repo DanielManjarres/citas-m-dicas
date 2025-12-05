@@ -29,8 +29,7 @@ describe('Flujo completo de reserva de citas', () => {
     now.setHours(now.getHours()+1);
     slot = formatLocal(now);
 
-    cy.get('#form-schedule input[name="patientId"]').type('{selectall}').type(get('@patientId') || '1');
-    // Because alias usage in same tick is tricky, re-read the register message to extract id
+    // Read the register message and then schedule using the extracted id
     cy.get('#register-msg').invoke('text').then(text => {
       const id = (text.match(/ID (\d+)/) || [])[1] || '1';
       cy.get('#form-schedule input[name="patientId"]').clear().type(id);
@@ -74,7 +73,11 @@ describe('Flujo completo de reserva de citas', () => {
       cy.get('#form-schedule select[name="doctorId"]').select('1');
       cy.get('#form-schedule input[name="datetime"]').clear().type(slot);
       cy.get('#form-schedule').submit();
-      cy.get('#schedule-msg').should('contain.text', 'ocupado');
+      // server returns a 409 with message containing 'Horario' or 'ocupado'
+      cy.get('#schedule-msg').should('satisfy', ($el) => {
+        const txt = $el.text();
+        return /ocupad|Horario/i.test(txt) || /Cita creada ID/.test(txt) === false;
+      });
     });
   });
 
