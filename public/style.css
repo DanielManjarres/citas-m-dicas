@@ -1,0 +1,7 @@
+body{font-family: Arial, Helvetica, sans-serif; padding:20px}
+h1{margin-bottom:12px}
+section{border:1px solid #ddd; padding:12px; margin-bottom:12px}
+label{display:block; margin:6px 0}
+.msg{color:crimson; margin-top:8px}
+button{margin-top:6px}
+#appointments-list li{margin:6px 0}
