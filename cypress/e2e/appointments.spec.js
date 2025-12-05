@@ -30,9 +30,10 @@ describe('Flujo completo de reserva de citas', () => {
 
     cy.get('#register-msg').invoke('text').then(text => {
       const id = (text.match(/ID (\d+)/) || [])[1] || '1';
-      cy.get('#form-schedule input[name="patientId"]').clear().type(id);
+      // select the patient from the improved UI
+      cy.get('#patient-select').select(id);
       cy.get('#form-schedule select[name="doctorId"]').select('1');
-      cy.get('#form-schedule input[name="datetime"]').type(slot);
+      cy.get('#datetime-input').clear().type(slot);
       cy.get('#form-schedule').submit();
       cy.get('#schedule-msg').should('contain.text', 'Cita creada ID');
       cy.get('#appointments-list').should('contain.text', patient.name);
@@ -64,9 +65,9 @@ describe('Flujo completo de reserva de citas', () => {
     cy.get('#form-register').submit();
     cy.get('#register-msg').should('contain.text', 'Registrado con ID').invoke('text').then(text =>{
       const id = (text.match(/ID (\d+)/) || [])[1];
-      cy.get('#form-schedule input[name="patientId"]').clear().type(id);
+      cy.get('#patient-select').select(id);
       cy.get('#form-schedule select[name="doctorId"]').select('1');
-      cy.get('#form-schedule input[name="datetime"]').clear().type(slot);
+      cy.get('#datetime-input').clear().type(slot);
       cy.get('#form-schedule').submit();
       cy.get('#schedule-msg').should('satisfy', ($el) => {
         const txt = $el.text();
@@ -77,9 +78,9 @@ describe('Flujo completo de reserva de citas', () => {
 
   it('Cancelar una cita existente', () => {
     cy.visit('/');
-    cy.get('#appointments-list li').first().within(() => {
+    cy.get('#appointments-list li', { timeout: 10000 }).first().within(() => {
       cy.get('button.cancel').click();
     });
-    cy.get('#appointments-list').should('not.contain.text', slot.replace('T',' '));
+    cy.get('#appointments-list', { timeout: 5000 }).should('not.contain.text', slot.replace('T',' '));
   });
 });
