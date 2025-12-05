@@ -10,7 +10,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// In-memory stores
+
 const patients = [];
 let patientIdSeq = 1;
 const doctors = [
@@ -20,7 +20,7 @@ const doctors = [
 const appointments = [];
 let appointmentIdSeq = 1;
 
-// Utilities
+
 function isValidEmail(email) {
   return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
 }
@@ -28,7 +28,7 @@ function isValidPhone(phone) {
   return /^\+?[0-9]{7,15}$/.test(phone);
 }
 
-// Patients
+
 app.post('/api/patients', (req, res) => {
   const { name, email, phone } = req.body;
   if (!name || !email || !phone) {
@@ -42,13 +42,11 @@ app.post('/api/patients', (req, res) => {
   res.json(patient);
 });
 
-// Doctors
+
 app.get('/api/doctors', (req, res) => {
   res.json(doctors);
 });
 
-// Appointments
-// Expect body: { patientId, doctorId, datetime } where datetime is ISO string
 app.post('/api/appointments', (req, res) => {
   const { patientId, doctorId, datetime } = req.body;
   if (!patientId || !doctorId || !datetime) return res.status(400).json({ error: 'Campos requeridos faltantes' });
@@ -61,7 +59,7 @@ app.post('/api/appointments', (req, res) => {
   const start = new Date(datetime);
   if (isNaN(start)) return res.status(400).json({ error: 'Datetime inválido' });
 
-  // Simple rule: appointments last 60 minutes; prevent overlap for same doctor
+
   const end = new Date(start.getTime() + 60 * 60 * 1000);
   const overlap = appointments.find(a => a.doctorId === doctor.id && !(end <= new Date(a.datetime) || start >= new Date(new Date(a.datetime).getTime() + 60*60*1000)));
   if (overlap) return res.status(409).json({ error: 'Horario ya ocupado para ese doctor' });
@@ -88,7 +86,6 @@ app.delete('/api/appointments/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-// Fallback to index
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });

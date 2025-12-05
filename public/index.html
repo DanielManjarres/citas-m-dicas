@@ -13,7 +13,7 @@
     <form id="form-register">
       <label>Nombre: <input name="name" required /></label><br/>
       <label>Email: <input name="email" required /></label><br/>
-      <label>Teléfono: <input name="phone" required placeholder="+34123456789"/></label><br/>
+      <label>Teléfono: <input name="phone" required placeholder="+57123456789"/></label><br/>
       <button type="submit">Registrar</button>
     </form>
     <div id="register-msg" class="msg"></div>
@@ -22,9 +22,11 @@
   <section id="schedule">
     <h2>Agendar cita</h2>
     <form id="form-schedule">
-      <label>Paciente ID: <input name="patientId" required /></label><br/>
+      <label>Paciente: <select name="patientId" id="patient-select" required>
+        <option value="">-- Seleccione paciente --</option>
+      </select></label><br/>
       <label>Doctor: <select name="doctorId" id="doctor-select"></select></label><br/>
-      <label>Fecha y hora: <input type="datetime-local" name="datetime" required /></label><br/>
+      <label>Fecha y hora: <input type="datetime-local" name="datetime" id="datetime-input" required /></label><br/>
       <button type="submit">Agendar</button>
     </form>
     <div id="schedule-msg" class="msg"></div>

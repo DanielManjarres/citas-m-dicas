@@ -1,7 +1,13 @@
-body{font-family: Arial, Helvetica, sans-serif; padding:20px}
+body{font-family: Arial, Helvetica, sans-serif; padding:20px; background:#f7f9fb}
 h1{margin-bottom:12px}
-section{border:1px solid #ddd; padding:12px; margin-bottom:12px}
-label{display:block; margin:6px 0}
+main{display:grid; grid-template-columns: 1fr 1fr; gap:16px}
+section{background:#fff; border:1px solid #e3e7ea; padding:16px; border-radius:6px}
+label{display:block; margin:8px 0}
 .msg{color:crimson; margin-top:8px}
-button{margin-top:6px}
-#appointments-list li{margin:6px 0}
+.msg.success{color:green}
+button{margin-top:8px; padding:8px 12px; border-radius:4px; border:1px solid #2b7cff; background:#2b7cff; color:#fff; cursor:pointer}
+button.secondary{background:#fff; color:#333; border:1px solid #ccc}
+#appointments-list{list-style:none; padding:0}
+#appointments-list li{margin:8px 0; padding:8px; border:1px solid #eef2f6; border-radius:4px; display:flex; justify-content:space-between; align-items:center}
+.meta{color:#666; font-size:0.9em}
+.pill{background:#eef6ff; color:#0b5ed7; padding:4px 8px; border-radius:999px; font-size:0.85em}

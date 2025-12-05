@@ -23,13 +23,11 @@ describe('Flujo completo de reserva de citas', () => {
       cy.wrap(id).as('patientId');
     });
 
-    // Schedule an appointment in the next hour boundary
     const now = new Date();
     now.setMinutes(0); now.setSeconds(0); now.setMilliseconds(0);
     now.setHours(now.getHours()+1);
     slot = formatLocal(now);
 
-    // Read the register message and then schedule using the extracted id
     cy.get('#register-msg').invoke('text').then(text => {
       const id = (text.match(/ID (\d+)/) || [])[1] || '1';
       cy.get('#form-schedule input[name="patientId"]').clear().type(id);
@@ -43,7 +41,6 @@ describe('Flujo completo de reserva de citas', () => {
 
   it('Validaciones: email inválido y campos vacíos', () => {
     cy.visit('/');
-    // empty fields
     cy.get('#form-register').within(() => {
       cy.get('input[name="name"]').clear();
       cy.get('input[name="email"]').clear();
@@ -52,7 +49,6 @@ describe('Flujo completo de reserva de citas', () => {
     });
     cy.get('#register-msg').should('contain.text', 'Campos requeridos');
 
-    // invalid email
     cy.get('#form-register input[name="name"]').type('Test');
     cy.get('#form-register input[name="email"]').type('invalid-email');
     cy.get('#form-register input[name="phone"]').type('+34123456');
@@ -62,7 +58,6 @@ describe('Flujo completo de reserva de citas', () => {
 
   it('Intento de agendar en horario ocupado para el mismo doctor', () => {
     cy.visit('/');
-    // Registrar otro paciente
     cy.get('#form-register input[name="name"]').clear().type('Maria');
     cy.get('#form-register input[name="email"]').clear().type('maria@example.com');
     cy.get('#form-register input[name="phone"]').clear().type('+34111222333');
@@ -73,7 +68,6 @@ describe('Flujo completo de reserva de citas', () => {
       cy.get('#form-schedule select[name="doctorId"]').select('1');
       cy.get('#form-schedule input[name="datetime"]').clear().type(slot);
       cy.get('#form-schedule').submit();
-      // server returns a 409 with message containing 'Horario' or 'ocupado'
       cy.get('#schedule-msg').should('satisfy', ($el) => {
         const txt = $el.text();
         return /ocupad|Horario/i.test(txt) || /Cita creada ID/.test(txt) === false;
@@ -83,11 +77,9 @@ describe('Flujo completo de reserva de citas', () => {
 
   it('Cancelar una cita existente', () => {
     cy.visit('/');
-    // ensure list has entries and cancel the first
     cy.get('#appointments-list li').first().within(() => {
       cy.get('button.cancel').click();
     });
-    // After cancel, appointment list should not contain the previously booked time
     cy.get('#appointments-list').should('not.contain.text', slot.replace('T',' '));
   });
 });
